@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
+  // Further reading: 
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
+}
+
+model Example {
+  id String @id @default(cuid())
+}
+
+// Necessary for Next auth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? //@db.Text
+  access_token      String? //@db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? //@db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  UserDetails   UserDetails?
+  Carts         Cart[]
+  Order         Order[]
+  role          Roles[]
+  Reviews       Reviews?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Roles {
+  id   String   @id @default(cuid())
+  role RoleEnum @unique @default(CUSTOMER)
+  user User[]
+}
+
+enum RoleEnum {
+  //The main user
+  CUSTOMER //API DONE
+  //TOP admin
+  OWNER //API DONE 
+  //control over Inventory
+  INVENTORY_MANAGER //API DOING 
+  //Control over customer accounts and services
+  CUSTOMERS_MANAGER
+  //
+  COMMANDS_MANAGER
+  DELIVERY_AGENT
+  CAC_M
+}
+
+model UserDetails {
+  id     String  @id @default(cuid())
+  adress String?
+  phone  String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId String  @unique
+}
+
+model Reviews {
+  id        String  @id @default(cuid())
+  Text      String
+  Product   Product @relation(fields: [productId], references: [id])
+  productId Int     @unique
+  User      User    @relation(fields: [userId], references: [id])
+  userId    String  @unique
+}
+
+model Product {
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String
+  size          String?
+  color         String?
+  configuration String?
+  version       String?
+  price         Float
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  brand         Brand          @relation(fields: [brandId], references: [id])
+  category      Category       @relation(fields: [categoryId], references: [id])
+  brandId       Int
+  categoryId    Int
+  inventoryItem InventoryItem?
+  Cart_Item     CartItem[]
+  Reviews       Reviews?
+
+  @@unique([name, size, brandId, categoryId])
+}
+
+model Brand {
+  id         Int        @id @default(autoincrement())
+  name       String
+  image      String?
+  Products   Product[]
+  categories Category[]
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  Products Product[]
+  brands   Brand[]
+}
+
+model Cart {
+  id         String    @id @default(cuid())
+  user       User?     @relation(fields: [userId], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  ordered    Boolean   @default(false)
+  discount   Discount? @relation(fields: [discountId], references: [id])
+
+  Order Order?
+
+  discountId String?
+  Cart_Item  CartItem[]
+  userId     String?
+}
+
+model CartItem {
+  id                 String  @id @default(cuid())
+  cart               Cart    @relation(fields: [cartsId], references: [id], onDelete: Cascade)
+  product            Product @relation(fields: [productsId], references: [id], onDelete: Cascade)
+  productPriceAtTime Float
+  quantity           Int
+  cartsId            String
+  productsId         Int
+}
+
+model Discount {
+  id         String   @id @default(cuid())
+  percentage Float
+  ExpireIn   DateTime
+  usedCount  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  Carts      Cart[]
+}
+
+model Epayment {
+  id              String  @id @default(cuid())
+  CIB_card_number String?
+  paied_value     Float
+  Order           Order?
+}
+
+model Order {
+  id        String @id @default(cuid())
+  ip_adress String
+
+  user               User?     @relation(fields: [userId], references: [id])
+  cart               Cart      @relation(fields: [cartsId], references: [id], onDelete: Cascade)
+  created_at         DateTime  @default(now())
+  ordered_shipAdress String
+  email              String?
+  phone              String
+  adress             String
+  confirmed          Boolean   @default(false)
+  shiped             Boolean   @default(false)
+  epayement          Epayment? @relation(fields: [epaymentId], references: [id], onDelete: Cascade)
+
+  userId     String? @unique
+  cartsId    String  @unique
+  epaymentId String? @unique
+}
+
+model InventoryItem {
+  id                              String   @id @default(cuid())
+  product                         Product  @relation(fields: [productsId], references: [id])
+  quantity_available              Int
+  display_inShop                  Boolean
+  delete_fromStock_if_no_quantity Boolean
+  delete_fromShop_if_no_quantity  Boolean
+  orders_count                    Int
+  created_at                      DateTime @default(now())
+  // updated_at                      DateTime @updatedAt
+
+  productsId Int @unique
+}
