@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       screens:{
         "3xl":"1792px",
+        "onlymobile" : {min:"0px", max : "639px"}
       },
       colors: {
         'Cactus1': '#14C38E',

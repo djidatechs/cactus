@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import ShopHeader from "../Shop/ShopHeader";
+import ShopHeader from "../Shop/ShopSpace/ShopHeader";
 
 interface Props {
     text? : string,

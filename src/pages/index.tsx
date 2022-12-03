@@ -4,8 +4,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import HomeCover from "../Components/Home/HomeCover";
 import State from "../Components/Home/State";
-import ShopSpace from "../Components/Shop/ShopSpace";
-import BlogSpace from "../Components/Blog/BlogSpace";
+import ShopSpace from "../Components/Shop/ShopSpace/ShopSpace";
+import BlogSpace from "../Components/Blog/BlogSpace/BlogSpace";
 
 
 const Home: NextPage = () => {
@@ -21,8 +21,19 @@ const Home: NextPage = () => {
       <main className="">
         <HomeCover/>
         <State/>
-        <ShopSpace fetcher="https://fakestoreapi.com/products?limit=12" title="🔥 Hot Promotions" footer="" titleStyle="text-red-600" />
-        <BlogSpace fetcher="https://jsonplaceholder.typicode.com/posts?limit=6" title="Top Blog Articles" footer="" titleStyle="text-white"/>
+
+        <ShopSpace 
+        fetcher="https://fakestoreapi.com/products?limit=12" 
+        title="🔥 Hot Promotions" 
+        footer="" 
+        titleStyle="text-red-600"
+        gridType={4} />
+
+        <BlogSpace 
+        fetcher="https://jsonplaceholder.typicode.com/posts?limit=6" 
+        title="Top Blog Articles" 
+        footer="" 
+        titleStyle="text-white"/>
       </main>
     </>
   );

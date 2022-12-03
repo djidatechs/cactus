@@ -9,12 +9,16 @@ interface Props {
     title? : string,
     titleStyle? : string,
     footer?: string,
+    gridType: number ,
 
   }
 
-const ShopSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle}:Props) => {
+const ShopSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle,gridType}:Props) => {
   const [store , setStore] = useState<any[]>([]);
   const [loading , setLoading] = useState(true);
+  const styler = (gridType == 4 ) 
+                  ? "grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 bg-black p-4   mb-[6px] gap-6"
+                  : "grid grid-cols-2  lg:grid-cols-3 bg-black p-6   mb-[6px] gap-6"
   useEffect(()=>{
     fetch(fetcher)
             .then(res=>res.json())
@@ -22,13 +26,14 @@ const ShopSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle}:Props) => 
               setStore(json)
               setLoading(false)
             })
+            .catch(e=>{})
   },[])
 
-  if (loading) return (<><ShopHeader text={title} titleStyle={titleStyle} /><div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div></> )
+  if (loading) return (<div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div> )
   return (
     <>
       <ShopHeader text={title} titleStyle={titleStyle} />
-      <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 bg-black p-4   mb-[6px] gap-6">
+      <div className={styler}>
       
       {
         !store.length

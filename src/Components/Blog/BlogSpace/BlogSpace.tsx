@@ -24,6 +24,7 @@ const BlogSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle}:Props) => 
         setLoading(false)
         setArticles(json)
       })
+      .catch(e=>{})
   },[])
   if (loading) return (<><BlogHeader text={title} titleStyle={titleStyle} /><div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div></> )
   return (
@@ -36,6 +37,7 @@ const BlogSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle}:Props) => 
             ?<div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div>
             : articles.slice(0, 6).map(article=>(
               <Article
+              key={article.id}
               title={article.title}
               desc={article.body}
               id={article.id}
