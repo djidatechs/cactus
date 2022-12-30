@@ -1,8 +1,10 @@
 import { type NextPage } from "next";
 import { useEffect, useState } from "react";
+import Topwall from "../TopWall/Topwall";
 import ShopElement from "./ShopElement";
 import ShopFooter from "./ShopFooter";
 import ShopHeader from "./ShopHeader";
+import Paginator from "../../general/Pagination";
 
 interface Props {
     fetcher : string , 
@@ -10,15 +12,17 @@ interface Props {
     titleStyle? : string,
     footer?: string,
     gridType: number ,
+    discount?: number,
+    noheader?:boolean,
 
   }
 
-const ShopSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle,gridType}:Props) => {
+const ShopSpace: NextPage<Props> = ({fetcher,title,footer,discount,titleStyle,gridType,noheader=false}:Props) => {
   const [store , setStore] = useState<any[]>([]);
   const [loading , setLoading] = useState(true);
   const styler = (gridType == 4 ) 
                   ? "grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 bg-black p-4   mb-[6px] gap-6"
-                  : "grid grid-cols-2  lg:grid-cols-3 bg-black p-6   mb-[6px] gap-6"
+                  : "grid grid-cols-2  lg:grid-cols-3 bg-black p-6    gap-6"
   useEffect(()=>{
     fetch(fetcher)
             .then(res=>res.json())
@@ -29,21 +33,22 @@ const ShopSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle,gridType}:P
             .catch(e=>{})
   },[])
 
-  if (loading) return (<div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div> )
+  if (loading || !store.length) return (<div className="h-full w-full rounded-none bg-black btn btn-square loading"></div> )
   return (
     <>
-      <ShopHeader text={title} titleStyle={titleStyle} />
+      
+      {noheader == true ? <></>:<Topwall title={title || ""} titleStyle={titleStyle} />}
+      
+      
       <div className={styler}>
       
       {
-        !store.length
-        ? <div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div> 
-        : store.map(product=>(
+        store.map(product=>(
           <ShopElement
             key={product.id}
             category={product.category}
             name={product.title}
-            discount={0.5}
+            discount={discount||1}
             price={product?.price}
             image={product?.image}
           />
@@ -56,6 +61,7 @@ const ShopSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle,gridType}:P
        
       </div>
       {/* <ShopFooter text={footer}/> */}
+      <Paginator/>
     </>
   );
 };

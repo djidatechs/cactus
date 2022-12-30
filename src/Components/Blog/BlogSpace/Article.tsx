@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import { useEffect, useState } from "react";
-import {BiCart} from "react-icons/bi"
+
+import Image from "next/image";
 
 interface Props {
     title : string , 
@@ -21,7 +22,7 @@ const Article: NextPage<Props> = ({title,desc, id } : Props) => {
   return (
   <>
   <div className="card w-96 min-w-[300px] min-h-full  bg-base-100 shadow-xl m-4">
-  <figure className="max-h-[200px] bg-white"><img className="w-full h-[200px]" src={image} alt="Shoes" /></figure>
+    <figure className="max-h-[200px] bg-white"><img className="w-full h-[200px]" src={image} alt="Shoes" /></figure>
   <div className="card-body text-xs">
     <h2 className="card-title text-sm">{title}</h2>
     <p>{desc}</p>

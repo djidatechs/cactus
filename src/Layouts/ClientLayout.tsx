@@ -18,7 +18,7 @@ const ClientLayout : NextPage<LayoutProps> = ({children}: LayoutProps) => {
     <>
     <div className="relative bg-base-100">
       <div className="flex justify-center">
-        <div className="w-full px-3 mx-3 lg:mx-0 sm:px-0 max-w-[700px] lg:max-w-[1170px] 3xl:max-w-[1500px]">
+        <div className="w-full px-3 mx-0 lg:mx-0 sm:px-0 max-w-[700px] lg:max-w-[1170px] 3xl:max-w-[1500px]">
           <div className={poppins.className}>
             <Navbar />
             

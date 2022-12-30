@@ -44,7 +44,7 @@ const ButtomNavBar: NextPage = () => {
                 <a className="label-text text-white ">(213) 558 71 31 53</a>
             </div>
             <div className="w-full sm:hidden">
-            <input type="text" placeholder="Search product" className="input input-base-200 rounded-sm w-full mx-2 rounded-br-xl" />
+            <input type="text" placeholder="Search anything" className="input input-base-200 rounded-sm w-full mx-2 rounded-br-xl" />
             </div>
         </div>
     </div>

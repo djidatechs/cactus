@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import { useEffect, useState } from "react";
+import Topwall from "../../Shop/TopWall/Topwall";
 import Article from "./Article";
 import ShopElement from "./Article";
 import ShopFooter from "./BlogFooter";
@@ -10,10 +11,11 @@ interface Props {
     title? : string,
     titleStyle? : string,
     footer?: string,
+    noheader? : boolean
 
   }
 
-const BlogSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle}:Props) => {
+const BlogSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle , noheader=false}:Props) => {
   const [loading , setLoading] = useState<boolean>(true);
   const [articles , setArticles] = useState<any[]>([]);
     
@@ -26,10 +28,10 @@ const BlogSpace: NextPage<Props> = ({fetcher,title,footer,titleStyle}:Props) => 
       })
       .catch(e=>{})
   },[])
-  if (loading) return (<><BlogHeader text={title} titleStyle={titleStyle} /><div className="h-[50vh] w-full rounded-none bg-black my-3 btn btn-square loading"></div></> )
+  if (loading) return (<div className="h-[50vh] w-full rounded-none bg-black  btn btn-square loading m-0"></div> )
   return (
     <>
-      <BlogHeader text={title} titleStyle={titleStyle} />
+      {noheader==true ? <></>:<Topwall title={title || ""} titleStyle={titleStyle} />}
       <div className="bg-black  p-4 py-5 w-full">
         <div className="overflow-x-scroll flex w-full">
           {

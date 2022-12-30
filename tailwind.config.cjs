@@ -11,7 +11,8 @@ module.exports = {
         'Cactus1': '#14C38E',
         'Cactus2' : "#00FFAB",
         'Cactus3' : "#B8F1B0",
-        'base-100' : "#1a1a1a"
+        'base-100' : "#1a1a1a",
+        
         
       },
     },
@@ -19,5 +20,6 @@ module.exports = {
   daisyui: {
     themes: ["forest" , "light"],
   },
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require('tailwind-scrollbar')({ nocompatible: true })],
+  
 };
